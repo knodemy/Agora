@@ -6,13 +6,9 @@ const app = express();
 const appId = process.env.AGORA_APP_ID;
 const appCertificate = process.env.AGORA_APP_CERTIFICATE;
 
-app.get('/', (req, res) => {
-  res.send('Hello from Vercel!');
-});
-
 app.get('/generate-token', (req, res) => {
-  const channelName = req.query.channel || 'demo-channel';
-  const uid = parseInt(req.query.uid) || 0;
+  const channelName = req.query.channel || "demo-channel";
+  const uid = 0;
   const role = RtcRole.PUBLISHER;
   const expirationTimeInSeconds = 3600;
   const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -27,8 +23,8 @@ app.get('/generate-token', (req, res) => {
     privilegeExpiredTs
   );
 
-  res.json({ token, channelName, uid });
+  res.json({ token });
 });
 
-// 👇 Export handler instead of app.listen()
+// ✅ Vercel-compatible export
 module.exports = app;
