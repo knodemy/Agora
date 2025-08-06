@@ -5,12 +5,12 @@ const app = express();
 
 const appId = process.env.AGORA_APP_ID;
 const appCertificate = process.env.AGORA_APP_CERTIFICATE;
+const channelName = "demo-channel"; // Fixed channel
+const uid = 0;
+const role = RtcRole.PUBLISHER;
+const expirationTimeInSeconds = 3600;
 
 app.get('/generate-token', (req, res) => {
-  const channelName = req.query.channel || "demo-channel";
-  const uid = 0;
-  const role = RtcRole.PUBLISHER;
-  const expirationTimeInSeconds = 3600;
   const currentTimestamp = Math.floor(Date.now() / 1000);
   const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
@@ -23,8 +23,16 @@ app.get('/generate-token', (req, res) => {
     privilegeExpiredTs
   );
 
-  res.json({ token });
+  res.json({
+    agora_app_id: appId,
+    agora_channel: channelName,
+    agora_token: token
+  });
 });
 
-// ✅ Vercel-compatible export
+app.get('/', (req, res) => {
+  res.send('Agora token service is live!');
+});
+
+// ✅ THIS is the Vercel-compatible export
 module.exports = app;
